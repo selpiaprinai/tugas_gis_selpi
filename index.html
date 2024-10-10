@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desakuu</title>
+    <link rel="stylesheet" href="assets/leaflet.css">
+    <script src="assets/leaflet.js"></script>
+    <script src="art-tiwugalih.geojson.js"></script>
+    <script src="line-tiwugalih.geojson.js"></script>
+    <style>
+        body, html {
+            padding: 0px;
+            margin: 0px;
+            height: 100%;
+        }
+        #map {
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="map"></div>
+    <script>
+        // Inisialisasi peta dengan tampilan awal
+        const map = L.map('map').setView([-8.7111953, 116.3446173], 13);
+
+        // Tambahkan layer OpenStreetMap
+        const openStreetMapLayer = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        });
+
+        // Tambahkan layer Google Maps Satelit
+        const googleSatLayer = L.tileLayer('https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+            maxZoom: 20,
+            subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+            attribution: '&copy; <a href="https://maps.google.com">Google Maps</a>'
+        });
+
+        // Membuat ikon kustom
+        var kantorIcon = L.icon({
+            iconUrl: 'assets/images/kantor.png',
+            iconSize: [32, 37],
+            iconAnchor: [16, 37],
+            popupAnchor: [0, -28]
+        });
+
+        var sekolahIcon = L.icon({
+            iconUrl: 'assets/images/sekolahh.png',
+            iconSize: [32, 37],
+            iconAnchor: [16, 37],
+            popupAnchor: [0, -28]
+        });
+
+        var ibadahIcon = L.icon({
+            iconUrl: 'assets/images/masjidd.png',
+            iconSize: [32, 37],
+            iconAnchor: [16, 37],
+            popupAnchor: [0, -28]
+        });
+
+        // Membuat Layer Groups
+        var pemerintahanLayer = L.layerGroup();
+        var pendidikanLayer = L.layerGroup();
+        var ibadahLayer = L.layerGroup();
+
+        // Tambahkan marker dengan ikon ke masing-masing layer group
+        var kantor_lurah_tiwu_galih = L.marker([-8.706358, 116.285444], { icon: kantorIcon }).bindPopup("Kantor Lurah Tiwugalih");
+        kantor_lurah_tiwu_galih.addTo(pemerintahanLayer);
+
+        var SDN5_bilepait = L.marker([-8.707859, 116.285112], { icon: sekolahIcon }).bindPopup("SDN5 Bilepait");
+        var SDN_punik = L.marker([-8.714868, 116.282], { icon: sekolahIcon }).bindPopup("SDN Punik");
+        var SDN6_praya = L.marker([-8.716756, 116.28104], { icon: sekolahIcon }).bindPopup("SDN6 Praya");
+        SDN5_bilepait.addTo(pendidikanLayer);
+        SDN_punik.addTo(pendidikanLayer);
+        SDN6_praya.addTo(pendidikanLayer);
+
+        var mushola1 = L.marker([-8.713414, 116.283309], { icon: ibadahIcon }).bindPopup("Mushola Karang Bali");
+        var mushola2 = L.marker([-8.714789, 116.282601], { icon: ibadahIcon }).bindPopup("Mushola Punik Tiwu Lesung");
+        var masjid1 = L.marker([-8.710826, 116.285026], { icon: ibadahIcon }).bindPopup("Masjid Tiwugalih");
+        var masjid2 = L.marker([-8.698123, 116.287697], { icon: ibadahIcon }).bindPopup("Darul Mutaqqin");
+        mushola1.addTo(ibadahLayer);
+        mushola2.addTo(ibadahLayer);
+        masjid1.addTo(ibadahLayer);
+        masjid2.addTo(ibadahLayer);
+
+        // Tambahkan kontrol layer untuk menampilkan/mematikan layer group
+        var baseLayers = {
+            "OpenStreetMap": openStreetMapLayer,
+            "Satelit": googleSatLayer
+        };
+
+        var overlayLayers = {
+            "Fasilitas Pemerintahan": pemerintahanLayer,
+            "Fasilitas Pendidikan": pendidikanLayer,
+            "Fasilitas Ibadah": ibadahLayer
+        };
+
+        L.control.layers(baseLayers, overlayLayers).addTo(map);
+
+        // Set layer awal yang ditampilkan
+        googleSatLayer.addTo(map); // Menampilkan layer Google Satelit saat awal
+        pemerintahanLayer.addTo(map);
+        pendidikanLayer.addTo(map);
+        ibadahLayer.addTo(map);
+
+        // Tambahkan event untuk klik pada peta
+        function onMapClick(e) {
+            alert("You clicked the map at " + e.latlng);
+        }
+        map.on('click', onMapClick);
+    </script>
+</body>
+</html>
